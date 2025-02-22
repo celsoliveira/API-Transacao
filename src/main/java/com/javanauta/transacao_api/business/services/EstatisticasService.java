@@ -19,10 +19,17 @@ public class EstatisticasService {
     public EstatisticasResponseDTO calcularEstatisticasTransacoes(Integer intervaloBusca){
 
         log.info("Iniciada a busca de estatísticas de transações pelo período de tempo " + intervaloBusca);
+
+        Long start = System.currentTimeMillis();
+
         List<TransacaoRequestDTO> transacoes = transacaoService.buscarTransacoes(intervaloBusca);
 
         DoubleSummaryStatistics estatisticasTransacoes =
                 transacoes.stream().mapToDouble(TransacaoRequestDTO::valor).summaryStatistics();
+
+        Long finish = System.currentTimeMillis();
+        long timeRequest = finish - start;
+        log.info("Tempo de requisição: " + timeRequest + "ms"); //milisegundos
 
         log.info("Estatística retornada com sucesso");
         if (transacoes.isEmpty()) {
